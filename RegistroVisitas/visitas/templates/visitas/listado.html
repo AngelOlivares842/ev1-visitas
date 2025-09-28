@@ -12,6 +12,17 @@ Listado de Visitas - Sistema de Visitas
         <p class="text-gray-600 mt-2">Total de visitas: {{ total_visitas }}</p>
     </div>
 
+    <!-- Mensajes -->
+    {% if messages %}
+    <div class="space-y-2">
+        {% for message in messages %}
+        <div class="p-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 text-green-800{% elif message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-yellow-100 text-yellow-800{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <!-- Visitas Activas -->
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div class="bg-yellow-500 px-6 py-4">
@@ -38,10 +49,11 @@ Listado de Visitas - Sistema de Visitas
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ visita.get_motivo_display }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ visita.hora_entrada|time:"H:i" }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200 registrar-salida" 
-                                        data-visita-id="{{ visita.id }}">
+                                <!-- Enlace directo sin JavaScript -->
+                                <a href="{% url 'registrar_salida' visita.id %}" 
+                                   class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200 inline-block">
                                     Registrar Salida
-                                </button>
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -95,42 +107,4 @@ Listado de Visitas - Sistema de Visitas
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.registrar-salida').forEach(button => {
-            button.addEventListener('click', function() {
-                const visitaId = this.dataset.visitaId;
-                const button = this;
-                
-                // Deshabilitar botón temporalmente
-                button.disabled = true;
-                button.textContent = 'Procesando...';
-                button.classList.add('opacity-50');
-                
-                fetch(`/visitas/salida/${visitaId}/`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            location.reload();
-                        } else {
-                            alert(data.error);
-                            button.disabled = false;
-                            button.textContent = 'Registrar Salida';
-                            button.classList.remove('opacity-50');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Error al registrar salida');
-                        button.disabled = false;
-                        button.textContent = 'Registrar Salida';
-                        button.classList.remove('opacity-50');
-                    });
-            });
-        });
-    });
-</script>
 {% endblock %}

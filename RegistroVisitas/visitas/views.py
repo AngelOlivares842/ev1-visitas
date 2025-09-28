@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.contrib import messages
 from django.http import JsonResponse
 from .models import Visita
 from .forms import VisitaForm
@@ -40,14 +41,21 @@ def listado_visitas(request):
     return render(request, 'visitas/listado.html', context)
 
 def registrar_salida(request, visita_id):
-    visita = get_object_or_404(Visita, id=visita_id)
+    try:
+        visita = get_object_or_404(Visita, id=visita_id)
+        
+        # Verificar si ya tiene hora de salida
+        if visita.hora_salida is None:
+            visita.hora_salida = timezone.now()
+            visita.save()
+            messages.success(request, f'Salida registrada correctamente para {visita.nombre}')
+        else:
+            messages.warning(request, f'{visita.nombre} ya tenía hora de salida registrada')
+            
+    except Exception as e:
+        messages.error(request, f'Error al registrar salida: {str(e)}')
     
-    # Usar estructura de decisión para validar
-    if visita.hora_salida is None:
-        visita.registrar_salida()
-        return JsonResponse({'success': True, 'hora_salida': visita.hora_salida.strftime('%H:%M')})
-    else:
-        return JsonResponse({'success': False, 'error': 'La visita ya tiene hora de salida registrada'})
+    return redirect('listado_visitas')
 
 def dashboard_visitas(request):
     hoy = date.today()
