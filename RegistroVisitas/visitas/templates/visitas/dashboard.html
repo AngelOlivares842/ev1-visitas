@@ -1,0 +1,56 @@
+{% extends 'visitas/base.html' %}
+
+{% block title %}Dashboard - Sistema de Visitas{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="text-center">
+        <h2 class="text-3xl font-bold text-gray-800">Dashboard de Visitas</h2>
+        <p class="text-gray-600 mt-2">{{ hoy }}</p>
+    </div>
+
+    <!-- Estadísticas principales -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Total Visitas -->
+        <div class="bg-white rounded-lg shadow-md p-6 text-center">
+            <div class="text-3xl font-bold text-blue-600 mb-2">{{ estadisticas.total }}</div>
+            <div class="text-gray-600 font-medium">Total Visitas</div>
+        </div>
+
+        <!-- Visitas Activas -->
+        <div class="bg-white rounded-lg shadow-md p-6 text-center">
+            <div class="text-3xl font-bold text-yellow-600 mb-2">{{ estadisticas.activas }}</div>
+            <div class="text-gray-600 font-medium">Visitas Activas</div>
+        </div>
+
+        <!-- Visitas Finalizadas -->
+        <div class="bg-white rounded-lg shadow-md p-6 text-center">
+            <div class="text-3xl font-bold text-green-600 mb-2">{{ estadisticas.finalizadas }}</div>
+            <div class="text-gray-600 font-medium">Visitas Finalizadas</div>
+        </div>
+    </div>
+
+    <!-- Visitas por Motivo -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-6">Visitas por Motivo</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for motivo, count in conteo_motivos.items %}
+            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                <span class="text-gray-700 font-medium">{{ motivo }}</span>
+                <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">
+                    {{ count }}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Botón de regreso -->
+    <div class="text-center">
+        <a href="{% url 'listado_visitas' %}" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition duration-200">
+            Volver al Listado
+        </a>
+    </div>
+</div>
+{% endblock %}

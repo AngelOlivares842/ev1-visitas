@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema de Visitas{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold">Sistema de Registro de Visitas</h1>
+                <nav class="flex space-x-4">
+                    <a href="{% url 'registrar_visita' %}" class="hover:bg-blue-700 px-3 py-2 rounded transition">Registrar Visita</a>
+                    <a href="{% url 'listado_visitas' %}" class="hover:bg-blue-700 px-3 py-2 rounded transition">Listado</a>
+                    <a href="{% url 'dashboard_visitas' %}" class="hover:bg-blue-700 px-3 py-2 rounded transition">Dashboard</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    {% comment %} <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-12">
+        <div class="container mx-auto px-4 py-6 text-center">
+            <p>&copy; 2024 Sistema de Registro de Visitas. Todos los derechos reservados.</p>
+        </div>
+    </footer> {% endcomment %}
+
+    <!-- Scripts -->
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>
